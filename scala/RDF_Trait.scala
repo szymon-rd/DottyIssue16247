@@ -74,12 +74,10 @@ object SomeObject:
 //Here we place classes for an implementation of RDF completely
 // based on interfaces, similar to rdf4j does https://rdf4j.org/    
 object InterfaceRDF {
-  trait Node extends java.io.Serializable:
-    def value: String
 
-  trait Uri extends Node
-  trait BNode extends Node
-  trait Lit extends Node
+  trait Uri extends testorg.TstNode
+  trait BNode extends testorg.TstNode
+  trait Lit extends testorg.TstNode
 
   trait IFactory:
     def mkBNode(): BNode
@@ -101,7 +99,7 @@ object InterfaceRDF {
 ///*
 object IRDF extends RDF:
   import InterfaceRDF as ir
-  override opaque type Node <: Matchable = ir.Node
+  override opaque type Node <: Matchable = testorg.TstNode
   override opaque type URI <: Node = ir.Uri
   override opaque type BNode <: Node = ir.BNode
   override opaque type Literal <: Node = ir.Lit
