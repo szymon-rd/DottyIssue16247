@@ -1,0 +1,1 @@
+/usr/local/scala/scala3-3.2.1-RC4/bin/scalac -classpath java -d build -release 17 -explain scala/RDF_Trait.scala

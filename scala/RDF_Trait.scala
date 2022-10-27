@@ -82,31 +82,8 @@ object SomeObject:
   def calculate[R <: RDF](node: RDF.Node[R])(using ops: ROps[R]): String =
     node.value
 
-//Here we place classes for an implementation of RDF completely
-// based on interfaces, similar to rdf4j does https://rdf4j.org/    
-object InterfaceRDF {
-  import testorg.*
-
-  trait IFactory:
-    def mkBNode(): BNode
-    def mkUri(u: String): Uri
-    def mkLit(u: String): Lit
-
-  def getFactory: IFactory = AFactory
-
-  private object AFactory extends IFactory:
-    var bnode: Int = 0
-    def mkBNode(): BNode =
-      bnode = bnode + 1
-      new BNode { def value = bnode.toString }
-    def mkUri(u: String): Uri =
-      new Uri { def value = u }
-    def mkLit(u: String): Lit =
-      new Lit { def value = u }
-}
-
 object IRDF extends RDF:
-  import InterfaceRDF as ir
+  lazy val factory = new testorg.impl.SimpleNodeFactory()
   override opaque type rNode <: Matchable = testorg.TstNode
   override opaque type rURI <: rNode = testorg.Uri
   override opaque type Node <: rNode = testorg.TstNode
@@ -117,10 +94,10 @@ object IRDF extends RDF:
 
   given rops: ROps[R] with
     override def mkUri(str: String): Try[RDF.URI[R]] = Try(
-      ir.getFactory.mkUri(str)
+      factory.mkUri(str)
     )
-    override def mkBNode(): RDF.BNode[R] = ir.getFactory.mkBNode()
-    override def mkLit(str: String): RDF.Literal[R] = ir.getFactory.mkLit(str)
+    override def mkBNode(): RDF.BNode[R] = factory.mkBNode()
+    override def mkLit(str: String): RDF.Literal[R] = factory.mkLit(str)
     override protected def nodeVal(node: RDF.Node[R]): String = node.value
 
     given node2Uri: TypeTest[RDF.Node[R], RDF.URI[R]] with

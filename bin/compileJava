@@ -1,0 +1,1 @@
+find java -name "*.java" | xargs /Library/Java/JavaVirtualMachines/jdk-11.0.16.1.jdk/Contents/Home/bin/javac
