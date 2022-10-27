@@ -8,9 +8,11 @@ trait RDF:
   rdf =>
 
   type R = rdf.type
-
-  type Node <: Matchable
-  type URI <: Node
+  
+  type rNode <: Matchable
+  type rURI <: rNode
+  type Node <: rNode
+  type URI <: Node & rURI
   type BNode <: Node
   type Literal <: Node
 
@@ -20,11 +22,18 @@ end RDF
 
 object RDF:
 
-  type Node[R <: RDF] <: Matchable = R match
-    case GetNode[n] => n & Matchable
+ 
+  type rNode[R <: RDF] <: Matchable = R match
+    case GetRelNode[n] => n & Matchable
+
+  type rURI[R <: RDF] <: rNode[R] = R match
+    case GetRelURI[n] => n & rNode[R]
+
+  type Node[R <: RDF] <: rNode[R] = R match
+    case GetNode[n] => n & rNode[R]
 
   type URI[R <: RDF] <: Node[R] = R match
-    case GetURI[u] => u & Node[R]
+    case GetURI[u] => u & Node[R] & rURI[R]
 
   type BNode[R <: RDF] <: Node[R] = R match
     case GetBNode[bn] => bn & Node[R]
@@ -32,7 +41,9 @@ object RDF:
   type Literal[R <: RDF] <: Node[R] = R match
     case GetLiteral[l] => l & Node[R]
 
-  private type GetNode[N <: Matchable] = RDF { type Node = N }
+  private type GetRelNode[N <: Matchable] = RDF { type rNode = N }
+  private type GetNode[N] = RDF { type Node = N }
+  private type GetRelURI[U] = RDF { type rURI = U }
   private type GetURI[U] = RDF { type URI = U }
   private type GetBNode[N] = RDF { type BNode = N }
   private type GetLiteral[L] = RDF { type Literal = L }
@@ -96,11 +107,13 @@ object InterfaceRDF {
     def mkLit(u: String): Lit =
       new Lit { def value = u }
 }
-///*
+
 object IRDF extends RDF:
   import InterfaceRDF as ir
-  override opaque type Node <: Matchable = testorg.TstNode
-  override opaque type URI <: Node = ir.Uri
+  override opaque type rNode <: Matchable = testorg.TstNode
+  override opaque type rURI <: rNode = ir.Uri
+  override opaque type Node <: rNode = testorg.TstNode
+  override opaque type URI <: Node & rURI = ir.Uri
   override opaque type BNode <: Node = ir.BNode
   override opaque type Literal <: Node = ir.Lit
 
