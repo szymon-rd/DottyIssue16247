@@ -66,3 +66,22 @@ that is the problem is not yet settled)
 
 ## Notes
 
+The problem was found in [commit e26983bec0d1a509cab97ac44f78f45935f4a980](https://github.com/bblfish/DottyIssue16247/commit/e26983bec0d1a509cab97ac44f78f45935f4a980) after adding a simple method `auth` to the `ROps` trait.
+
+```scala
+ protected def auth(uri: RDF.URI[R]): Try[String]
+```
+
+The next commit after that was to clean up the code into three sections:
+ - generic RDF -- all the code that does not know about implementations
+ - class-based -- the implementation that works using scala classes
+ - interface-based -- the implementation works using interfaces (Java ones in particular)
+
+using a side by side diff tool such as opendiff on macos, will help show
+that the difference between RDF_Class and RDF_Interface is essentially 
+just that RDF_Class needs to supply its own classes and factory. 
+
+```zsh
+cd scala
+opendiff RDF_Class.scala  RDF_Interface.scala
+```
