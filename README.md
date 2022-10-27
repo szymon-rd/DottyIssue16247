@@ -13,72 +13,56 @@ export JAVA_HOME=/Library/Java/JavaVirtualMachines/temurin-17.jdk/Contents/Home
 export PATH=/bin:/usr/bin:/sbin:/usr/local/scala/scala3-3.2.1-RC4/bin:/usr/local/scala/sbt-1.7.2/bin
 ```
 
-First compile the java code
+To compile the code look at the two scripts in [bin](bin/) directory.
+
+The RDF code based on Scala Classes works
 
 ```zsh
-javac java/testorg/TstNode.java
+➤  sh bin/compileScalaPure
+Success(https://bblfish.net/#i)
+folded=<https://bblfish.net/#i>
+matched should be uriisURI class_based.ClassTypes$AFactory$$anon$2@358ee631with authority Success(bblfish.net)
 ```
-That produces the class file in the same directory.
-Then compile the scala file with
+
+The code relying on Java interfaces does not (whether it is Java or just the pure interfaces 
+that is the problem is not yet settled)
 
 ```zsh
- scalac -classpath java -d build -explain scala/RDF_Trait.scala
-```
-
-That searches for the java file in the right dir, and outputs all the new files in the build directory.
-
-To run the program
-```zsh
-/usr/local/scala/scala3-3.2.0/bin/scala -classpath java:build interf_based.run
-```
-
-I did get an error on class file major version doing that as I had compiled the program with
-java 18 and then ran it with java 17. So be careful which one is available.
-
-
-## Notes
-
-If I use my scalac version 3.2.0 downloaded on 
-```zsh
-➤  ls -al "$(which scalac)"                                                                                     1 ↵
--rwxr-xr-x  1 hjs  staff  128931 Sep  8 16:08 /Users/hjs/Library/Application Support/Coursier/bin/scalac
-```
-I get the error
-
-```scala
-➤  scalac -classpath java -d build -explain scala/RDF_Trait.scala
--- Error: scala/RDF_Trait.scala:107:8 ------------------------------------------
-107 |  given rops: ROps[R] with
-    |        ^
-    |object creation impossible, since protected def nodeVal(node: interf_based.RDF.Node[R]): String in trait ROps in package interf_based is not defined
-    |(Note that
-    | parameter interf_based.RDF.Node[R] in protected def nodeVal(node: interf_based.RDF.Node[R]): String in trait ROps in package interf_based does not match
-    | parameter testorg.TstNode & Matchable in protected override def nodeVal(node: testorg.TstNode & Matchable): String in object rops in object IRDF
-    | )
--- [E038] Declaration Error: scala/RDF_Trait.scala:113:27 ----------------------
-113 |    override protected def nodeVal(node: RDF.Node[R]): String = node.value
-    |                           ^
-    |method nodeVal has a different signature than the overridden declaration
-    |---------------------------------------------------------------------------
-    | Explanation (enabled by `-explain`)
-    |- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    | There must be a non-final field or method with the name nodeVal and the
-    | same parameter list in a super class of object rops to override it.
-    |
-    |   protected override def nodeVal(node: testorg.TstNode & Matchable): String
-    |
-    | The super classes of object rops contain the following members
-    | named nodeVal:
-    |   protected def nodeVal(node: interf_based.RDF.Node[interf_based.IRDF.R]): String
-     ---------------------------------------------------------------------------
+➤  sh bin/compileJava
+-- Error: scala/RDF_Interface.scala:18:8 ---------------------------------------
+18 |  given rops: ROps[R] with
+   |        ^
+   |object creation impossible, since protected def auth(uri: generic.RDF.URI[R]): util.Try[String] in trait ROps in package generic is not defined
+   |(Note that
+   | parameter generic.RDF.URI[R] in protected def auth(uri: generic.RDF.URI[R]): util.Try[String] in trait ROps in package generic does not match
+   | parameter testorg.Uri & (testorg.TstNode & (testorg.TstNode & Matchable)) & (testorg.Uri &
+   |
+   |(testorg.TstNode & Matchable)) in protected override def auth
+   |  (uri: testorg.Uri & (testorg.TstNode & (testorg.TstNode & Matchable)) & (
+   |    testorg.Uri
+   |   & (testorg.TstNode & Matchable))): util.Try[String] in object rops in object IRDF
+   | )
+-- [E038] Declaration Error: scala/RDF_Interface.scala:25:27 -------------------
+25 |    override protected def auth(uri: RDF.URI[R]): Try[String] =
+   |                           ^
+   |   method auth has a different signature than the overridden declaration
+   |----------------------------------------------------------------------------
+   | Explanation (enabled by `-explain`)
+   |- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+   | There must be a non-final field or method with the name auth and the
+   | same parameter list in a super class of object rops to override it.
+   |
+   |   protected override def auth
+   |   (uri: testorg.Uri & (testorg.TstNode & (testorg.TstNode & Matchable)) & (
+   |     testorg.Uri
+   |    & (testorg.TstNode & Matchable))): util.Try[String]
+   |
+   | The super classes of object rops contain the following members
+   | named auth:
+   |   protected def auth(uri: generic.RDF.URI[interf_based.IRDF.R]): util.Try[String]
+    ----------------------------------------------------------------------------
 2 errors found
 ```
 
-which is very similar to the error in banana-rdf.
-
-but with another version of scalac
-
-```
-➤ /usr/local/scala/scala3-3.2.0/bin/scalac -classpath java -d build -explain scala/RDF_Trait.scala
-
+## Notes
 
