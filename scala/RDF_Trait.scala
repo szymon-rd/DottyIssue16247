@@ -85,10 +85,7 @@ object SomeObject:
 //Here we place classes for an implementation of RDF completely
 // based on interfaces, similar to rdf4j does https://rdf4j.org/    
 object InterfaceRDF {
-
-  trait Uri extends testorg.TstNode
-  trait BNode extends testorg.TstNode
-  trait Lit extends testorg.TstNode
+  import testorg.*
 
   trait IFactory:
     def mkBNode(): BNode
@@ -111,11 +108,12 @@ object InterfaceRDF {
 object IRDF extends RDF:
   import InterfaceRDF as ir
   override opaque type rNode <: Matchable = testorg.TstNode
-  override opaque type rURI <: rNode = ir.Uri
+  override opaque type rURI <: rNode = testorg.Uri
   override opaque type Node <: rNode = testorg.TstNode
-  override opaque type URI <: Node & rURI = ir.Uri
-  override opaque type BNode <: Node = ir.BNode
-  override opaque type Literal <: Node = ir.Lit
+  override opaque type URI <: Node & rURI = testorg.Uri
+  override opaque type BNode <: Node = testorg.BNode
+  override opaque type Literal <: Node = testorg.Lit
+
 
   given rops: ROps[R] with
     override def mkUri(str: String): Try[RDF.URI[R]] = Try(
@@ -128,20 +126,20 @@ object IRDF extends RDF:
     given node2Uri: TypeTest[RDF.Node[R], RDF.URI[R]] with
       def unapply(x: RDF.Node[R]): Option[x.type & RDF.URI[R]] =
         x match
-          case u: (x.type & ir.Uri) => Some(u)
-          case _                    => None
+          case u: (x.type & testorg.Uri) => Some(u)
+          case _                         => None
 
     given node2BN: TypeTest[RDF.Node[R], RDF.BNode[R]] with
       def unapply(x: RDF.Node[R]): Option[x.type & RDF.BNode[R]] =
         x match
-          case u: (x.type & ir.BNode) => Some(u)
-          case _                      => None
+          case u: (x.type & testorg.BNode) => Some(u)
+          case _                           => None
 
     given node2Lit: TypeTest[RDF.Node[R], RDF.Literal[R]] with
       def unapply(x: RDF.Node[R]): Option[x.type & RDF.Literal[R]] =
         x match
-          case u: (x.type & ir.Lit) => Some(u)
-          case _                    => None
+          case u: (x.type & testorg.Lit) => Some(u)
+          case _                         => None
 
 end IRDF
 
