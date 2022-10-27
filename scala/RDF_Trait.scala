@@ -61,11 +61,13 @@ trait ROps[R <: RDF]:
 
   // def mkRelURI(str: String): Try[RDF.rURI[R]]
   protected def nodeVal(node: RDF.Node[R]): String
+  protected def auth(uri: RDF.URI[R]): Try[String]
+   
+  extension (uri: URI[R])
+    def authority: Try[String] = auth(uri)
 
   extension (nd: RDF.Node[R])
     def value: String = nodeVal(nd)
-    def authority(uri: RDF.URI[R]): Try[String] =
-      Try(java.net.URI.create(nodeVal(uri)).getAuthority())
     def fold[T](
         uF: RDF.URI[R] => T,
         bF: RDF.BNode[R] => T,
@@ -99,6 +101,8 @@ object IRDF extends RDF:
     override def mkBNode(): RDF.BNode[R] = factory.mkBNode()
     override def mkLit(str: String): RDF.Literal[R] = factory.mkLit(str)
     override protected def nodeVal(node: RDF.Node[R]): String = node.value
+    override protected def auth(uri: RDF.URI[R]): Try[String] = 
+      Try(java.net.URI.create(nodeVal(uri)).getAuthority())
 
     given node2Uri: TypeTest[RDF.Node[R], RDF.URI[R]] with
       def unapply(x: RDF.Node[R]): Option[x.type & RDF.URI[R]] =
@@ -133,7 +137,7 @@ class Test[R <: RDF](using rops: ROps[R]):
   val matched = nodeU match
     case bn: RDF.BNode[R]  => "isBNode " + bn
     case l: RDF.Literal[R] => "literal " + l
-    case u: RDF.URI[R]     => "isURI " + u
+    case u: RDF.URI[R]     => "isURI " + u + "with authority " + u.authority
 
 end Test
 
@@ -142,3 +146,4 @@ end Test
   println(test.x)
   println("folded=" + test.folded)
   println("matched should be uri" + test.matched)
+
