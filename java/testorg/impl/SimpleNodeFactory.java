@@ -5,6 +5,14 @@ import testorg.factory.*;
 
 public class SimpleNodeFactory implements MkNodes {
     int counter = 0;	
+    private static final SimpleNodeFactory shared = new SimpleNodeFactory();
+
+    protected SimpleNodeFactory() {}
+
+    public static SimpleNodeFactory getInstance() {
+        return shared;
+    }
+
     public BNode mkBNode() {
 	String name = "bn_"+counter;    
 	counter = counter + 1;

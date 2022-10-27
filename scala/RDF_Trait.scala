@@ -83,7 +83,7 @@ object SomeObject:
     node.value
 
 object IRDF extends RDF:
-  lazy val factory = new testorg.impl.SimpleNodeFactory()
+  lazy val factory = testorg.impl.SimpleNodeFactory.getInstance()
   override opaque type rNode <: Matchable = testorg.TstNode
   override opaque type rURI <: rNode = testorg.Uri
   override opaque type Node <: rNode = testorg.TstNode
