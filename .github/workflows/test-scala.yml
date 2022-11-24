@@ -23,3 +23,5 @@ jobs:
       - name: compile scala code that depends on java    
         run: scalac -classpath java -d build -release 17 -explain scala/RDF_Interface.scala scala/RDF.scala
       - name: compile scala code    
+        run: scala -classpath build class_based.run
+
