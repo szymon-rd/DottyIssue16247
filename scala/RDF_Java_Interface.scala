@@ -6,7 +6,7 @@ import generic.*
 
 // here we use interfaces written in Java 
 // todo, put back example using traits only to see if Java is the problem
-object IRDF extends RDF:
+object JavaInterfaceRDF extends RDF:
   lazy val factory = testorg.impl.SimpleNodeFactory.getInstance()
   override opaque type rNode <: Matchable = testorg.TstNode
   override opaque type rURI <: rNode = testorg.Uri
@@ -21,7 +21,7 @@ object IRDF extends RDF:
     )
     override def mkBNode(): RDF.BNode[R] = factory.mkBNode()
     override def mkLit(str: String): RDF.Literal[R] = factory.mkLit(str)
-    override protected def nodeVal(node: RDF.Node[R]): String = node.value
+    override protected def nodeVal(node: RDF.Node[R]): String = node.value()
     override protected def auth(uri: RDF.URI[R]): Try[String] = 
       Try(java.net.URI.create(nodeVal(uri)).getAuthority())
 
@@ -43,10 +43,10 @@ object IRDF extends RDF:
           case u: (x.type & testorg.Lit) => Some(u)
           case _                         => None
 
-end IRDF
+end JavaInterfaceRDF
 
 @main def run =
-  val test = Test[IRDF.type]
+  val test = Test[JavaInterfaceRDF.type]
   println(test.x)
   println("folded=" + test.folded)
   println("matched should be uri" + test.matched)
