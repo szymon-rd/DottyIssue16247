@@ -1,4 +1,4 @@
-# Code to reproduce dotty Issue 16247, for new issue 16408
+# reproduce dotty Issue 16247 => open #16408
 
 For details on the problem see [Issue 16247: Should Java Interfaces be Matchable?](https://github.com/lampepfl/dotty/issues/16247). That issue was closed as the bug was not
 reproducible. The history of this github repository traces my attempts at duplicating it.
