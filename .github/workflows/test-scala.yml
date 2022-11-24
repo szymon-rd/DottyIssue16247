@@ -12,16 +12,10 @@ jobs:
           java-version: 17
       - uses: coursier/cache-action@v6.3
       - uses: VirtusLab/scala-cli-setup@v0.1
-      - name: compile pure scala code
-        run: scalac -d build -release 17 -explain scala/RDF_Class.scala scala/RDF.scala
-      - name: run pure scala code
-        run: scala -classpath build class_based.run
-      - name: clean
-        run: sh bin/clean
-      - name: compile java
-        run: find java -name "*.java" | xargs javac
-      - name: compile scala code that depends on java    
-        run: scalac -classpath java -d build -release 17 -explain scala/RDF_Interface.scala scala/RDF.scala
-      - name: compile scala code    
-        run: scala -classpath build class_based.run
+      - name: compile and run Class based code
+        run: scala-cli  scala/RDF_Class.scala scala/RDF.scala
+      - name: compile java interfaces
+        run: find java -name "*.java" | xargs java
+      - name: compile scala code that depends on java (this will fail)
+        run: scala-cli -classpath java scala/RDF_Interface.scala scala/RDF.scala
 
