@@ -1,6 +1,8 @@
-# Attempting to reporduce dotty Issue 16247 
+# Code to reproduce dotty Issue 16247, for new issue 16408
 
-For details on the problem see [Issue 16247: Should Java Interfaces be Matchable?](https://github.com/lampepfl/dotty/issues/16247). 
+For details on the problem see [Issue 16247: Should Java Interfaces be Matchable?](https://github.com/lampepfl/dotty/issues/16247). That issue was closed as the bug was not
+reproducible. The history of this github repository traces my attempts at duplicating it.
+This was successful with [commit e26983bec0d1a509cab97ac44f78f45935f4a980](https://github.com/bblfish/DottyIssue16247/commit/e26983bec0d1a509cab97ac44f78f45935f4a980) and led to reopening the issue as [Problem with Traits not being Matchable #16408](https://github.com/lampepfl/dotty/issues/16408)
 
 An intial attempt seemed to reproduce the problem. but as per [26 Oct, discussion on Discord](https://discord.com/channels/632150470000902164/632628489719382036/1034828756063363082) it turns out this seems to have been tied to my OS or java installation...
 
