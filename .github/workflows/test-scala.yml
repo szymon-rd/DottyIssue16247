@@ -15,7 +15,7 @@ jobs:
       - name: compile and run Class based code
         run: scala-cli  scala/RDF_Class.scala scala/RDF.scala
       - name: compile java interfaces
-        run: find java -name "*.java" | xargs java
+        run: find java -name "*.java" | xargs javac
       - name: compile scala code that depends on java (this will fail)
         run: scala-cli -classpath java scala/RDF_Interface.scala scala/RDF.scala
 
