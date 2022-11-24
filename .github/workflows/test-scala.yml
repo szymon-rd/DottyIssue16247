@@ -15,7 +15,7 @@ jobs:
       - name: compile and run Class based code
         run: scala-cli --scala 3.nightly scala/RDF_Class.scala scala/RDF.scala
       - name: compile using scala traits    
-        run: scala-cli --scala 3.nightly scala/RDF_Traits.scala scala/RDF_UsingScalaTrait.scala scala/RDF.scala
+        run: scala-cli --scala 3.nightly scala/RDF_Traits.scala scala/RDF_UsingScalaTrait.scala scala/RDF.scala 
       - name: compile java interfaces
         if: always()
         run: find java -name "*.java" | xargs javac
