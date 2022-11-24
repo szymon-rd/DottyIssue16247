@@ -10,7 +10,7 @@ I try to use minimal commands and limit what jdk and java compiler I am using
 
 ```zsh
 export JAVA_HOME=/Library/Java/JavaVirtualMachines/temurin-17.jdk/Contents/Home
-export PATH=/bin:/usr/bin:/sbin:/usr/local/scala/scala3-3.2.1-RC4/bin:/usr/local/scala/sbt-1.7.2/bin
+export SCALA_HOME=/usr/local/scala/scala3-3.2.1/
 ```
 
 To compile the code look at the two scripts in [bin](bin/) directory.
@@ -24,8 +24,7 @@ folded=<https://bblfish.net/#i>
 matched should be uriisURI class_based.ClassTypes$AFactory$$anon$2@358ee631with authority Success(bblfish.net)
 ```
 
-The code relying on Java interfaces does not (whether it is Java or just the pure interfaces 
-that is the problem is not yet settled)
+The code relying on Java interfaces does not.
 
 ```zsh
 ➤  sh bin/compileJava
@@ -62,6 +61,13 @@ that is the problem is not yet settled)
    |   protected def auth(uri: generic.RDF.URI[interf_based.IRDF.R]): util.Try[String]
     ----------------------------------------------------------------------------
 2 errors found
+```
+
+Indeed the code relying on Scala traits does not compile either. Here we use scala-cli as we do
+in the github actions that are run whenever a commit is sent to this repository. See [workflows reports](https://github.com/bblfish/DottyIssue16247/actions/workflows/test-scala.yml).
+
+```scala
+scala-cli --scala 3.2.1 scala/RDF_Traits.scala scala/RDF_UsingScalaTrait.scala scala/RDF.scala
 ```
 
 ## Notes
