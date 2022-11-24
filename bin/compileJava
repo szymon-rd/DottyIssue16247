@@ -1,5 +1,5 @@
 # compile the java code
-find java -name "*.java" | xargs /Library/Java/JavaVirtualMachines/jdk-11.0.16.1.jdk/Contents/Home/bin/javac
+find java -name "*.java" | xargs $JAVA_HOME/bin/javac
 
 #compile the scala code that depends on the Java code
-/usr/local/scala/scala3-3.2.1-RC4/bin/scalac -classpath java -d build -release 17 -explain scala/RDF_Interface.scala scala/RDF.scala
+$SCALA_HOME/bin/scalac -classpath java -d build -release 17 -explain scala/RDF_Java_Interface.scala scala/RDF.scala

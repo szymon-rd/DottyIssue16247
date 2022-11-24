@@ -17,6 +17,8 @@ jobs:
       - name: compile using scala traits    
         run: scala-cli --scala 3.2.1 scala/RDF_Traits.scala scala/RDF_UsingScalaTrait.scala scala/RDF.scala
       - name: compile java interfaces
+        if: always()
         run: find java -name "*.java" | xargs javac
       - name: compile scala code that depends on java (this will fail)
+        if: always()
         run: scala-cli -classpath java --scala 3.2.1 scala/RDF_Java_Interface.scala scala/RDF.scala
