@@ -13,10 +13,10 @@ jobs:
       - uses: coursier/cache-action@v6.3
       - uses: VirtusLab/scala-cli-setup@v0.1
       - name: compile and run Class based code
-        run: scala-cli --scala scala/RDF_Class.scala scala/RDF.scala
+        run: scala-cli --scala 3.2.1 scala/RDF_Class.scala scala/RDF.scala
       - name: compile using scala traits    
         run: scala-cli --scala 3.2.1 scala/RDF_Traits.scala scala/RDF_UsingScalaTrait.scala scala/RDF.scala
       - name: compile java interfaces
         run: find java -name "*.java" | xargs javac
       - name: compile scala code that depends on java (this will fail)
-        run: scala-cli -classpath java scala/RDF_Java_Interface.scala scala/RDF.scala
+        run: scala-cli -classpath java --scala 3.2.1 scala/RDF_Java_Interface.scala scala/RDF.scala
